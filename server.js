@@ -1,20 +1,21 @@
+// Configuración de Express
 const express = require("express");
-const cors = require("cors");
-
 const app = express();
 
+// Habilitar CORS
+const cors = require("cors");
 var corsOptions = {
   origin: "http://localhost:8081"
 };
-
 app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
+// Parsear solicitudes con formato JSON
 app.use(express.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
+// Parsear solicitudes con formato x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+// Conectar a la base de datos
 const db = require("./app/models");
 db.mongoose
   .connect(db.url, {
@@ -22,22 +23,24 @@ db.mongoose
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log("Connected to the database!");
+    console.log("Conectado a la base de datos!");
   })
   .catch(err => {
-    console.log("Cannot connect to the database!", err);
+    console.log("No se pudo conectar a la base de datos!", err);
     process.exit();
   });
 
-// simple route
+// Ruta simple
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json({ message: "Bienvenida a la aplicación de bezkoder." });
 });
 
+// Importar rutas
 require("./app/routes/turorial.routes")(app);
 
-// set port, listen for requests
+// Establecer puerto y escuchar solicitudes
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+  console.log(`Servidor ejecutándose en el puerto ${PORT}.`);
 });
+
